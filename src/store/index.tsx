@@ -8,6 +8,7 @@ const reducers = combineReducers({
   user: userSlice,
 });
 
+// 세션 스토리지, 로컬 스토리지에 저장할 때 사용
 const persistConfig = {
   key: 'root',
   storage,
