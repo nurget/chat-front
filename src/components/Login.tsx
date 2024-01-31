@@ -29,8 +29,7 @@ export const Login = () => {
     setError(false);
     try {
       const res = await axiosHttp.post('/api/login', chatUser);
-      localStorage.setItem('user', JSON.stringify(res.data));
-      console.log(res.data);
+      localStorage.setItem('token', res.data.token);
       dispatch(setUser(res.data));
       navigate('/main');
     } catch (err) {

@@ -2,6 +2,7 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import React, { useState } from 'react';
 import { MainContainer } from '@chatscope/chat-ui-kit-react';
 import { UserList } from './UserList';
+import { ChatList } from './ChatList';
 
 export const Main = () => {
   const [messageInputValue, setMessageInputValue] = useState('');
@@ -16,7 +17,7 @@ export const Main = () => {
       >
         <MainContainer responsive>
           <UserList />
-
+          <ChatList />
           {/* <Sidebar position="right">
           <ExpansionPanel open title="INFO">
             <p>Lorem ipsum</p>
