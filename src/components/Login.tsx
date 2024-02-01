@@ -1,17 +1,19 @@
-import axios from 'axios';
 import React, { useState } from 'react';
+import { User } from '../types/User.type';
 import { useNavigate } from 'react-router-dom';
 import { axiosHttp } from '../api/axiosHttp';
-import { useAppDispatch } from '../store';
-import { setUser } from '../store/userSlice';
-import { User } from '../types/User.type';
+import { initUser, setUser } from '../store/userSlice';
+import { useChatDispatch } from '../store';
+import axios from 'axios';
+import { initClient } from '../service/ChatService';
+import { setUserList } from '../store/userListSlice';
 
 export const Login = () => {
   const [error, setError] = useState<boolean>(false);
   const [chatUser, setChatUser] = useState<User>({});
   const [rememberId, setRememberId] = useState<boolean>(false);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useChatDispatch();
   const navigate = useNavigate();
   const changeUser = (evt: any) => {
     setChatUser({
@@ -19,30 +21,27 @@ export const Login = () => {
       [evt.target.id]: evt.target.value,
     });
   };
-  const checkRememberId = (evt: any) => {
+  const checkRembmerId = (evt: any) => {
     setRememberId(evt.target.checked);
   };
-
-  // const login = async () => {
-  // setError(false);
   const login = async () => {
     setError(false);
     try {
       const res = await axiosHttp.post('/api/login', chatUser);
       localStorage.setItem('token', res.data.token);
+      localStorage.setItem('uiNum', res.data.uiNum);
       dispatch(setUser(res.data));
       navigate('/main');
     } catch (err) {
+      console.error(err);
       setError(true);
     }
   };
-
   return (
     <div className="auth-wrapper">
       <div className="auth-inner">
         <form>
           <h3>Sign In</h3>
-
           <div className="mb-3">
             {error ? (
               <div className="text-danger">
@@ -53,22 +52,22 @@ export const Login = () => {
             )}
             <label>ID</label>
             <input
-              id="uiId"
               type="text"
+              id="uiId"
               className="form-control"
-              placeholder="Enter ID"
-              onChange={changeUser}
+              placeholder="아이디"
               value={chatUser.uiId || ''}
+              onChange={changeUser}
             />
           </div>
 
           <div className="mb-3">
             <label>Password</label>
             <input
-              id="uiPwd"
               type="password"
+              id="uiPwd"
               className="form-control"
-              placeholder="Enter password"
+              placeholder="비밀번호"
               onChange={changeUser}
             />
           </div>
@@ -79,7 +78,7 @@ export const Login = () => {
                 type="checkbox"
                 className="custom-control-input"
                 id="customCheck1"
-                onChange={checkRememberId}
+                onChange={checkRembmerId}
                 checked={rememberId}
               />
               <label className="custom-control-label" htmlFor="customCheck1">
@@ -90,7 +89,7 @@ export const Login = () => {
 
           <div className="d-grid">
             <button type="button" className="btn btn-primary" onClick={login}>
-              Login
+              Sign In
             </button>
           </div>
           <p className="forgot-password text-right">

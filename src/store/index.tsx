@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import userSlice from './userSlice';
+import userListReducer from './userListSlice';
 
 const reducers = combineReducers({
   user: userSlice,
+  userList: userListReducer,
 });
 
 // 세션 스토리지, 로컬 스토리지에 저장할 때 사용
@@ -23,5 +25,5 @@ export const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }),
 });
 
-export const useAppDispatch = () => useDispatch();
-export const useAppSelector = useSelector;
+export const useChatDispatch = () => useDispatch();
+export const useChatSelector = useSelector;

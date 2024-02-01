@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { config } from 'process';
-import { useAppSelector } from '../store';
 
 const url = `${process.env.REACT_APP_HTTP}://${process.env.REACT_APP_HOST}`;
 export const axiosHttp = axios.create({
