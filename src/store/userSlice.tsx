@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { PURGE } from 'redux-persist';
 import { User } from '../types/User.type';
 
 const initialState: User = {
@@ -44,11 +45,11 @@ const userSlice = createSlice({
       state.loginDate = action.payload.loginDate;
       state.login = action.payload.login;
     },
-    initUser: (state: User) => {
-      state = {};
-    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => initialState);
   },
 });
 
-export const { setUser, initUser } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 export default userSlice.reducer;

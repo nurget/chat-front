@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const userListSlice = createSlice({
-  name: 'user',
+  name: 'userList',
   initialState: { list: [] },
   reducers: {
     setUserList: (state: any, action: any) => {

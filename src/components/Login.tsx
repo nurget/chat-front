@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { User } from '../types/User.type';
 import { useNavigate } from 'react-router-dom';
 import { axiosHttp } from '../api/axiosHttp';
-import { initUser, setUser } from '../store/userSlice';
+import { setUser } from '../store/userSlice';
 import { useChatDispatch } from '../store';
 import axios from 'axios';
 import { initClient } from '../service/ChatService';
@@ -37,6 +37,11 @@ export const Login = () => {
       setError(true);
     }
   };
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
+
   return (
     <div className="auth-wrapper">
       <div className="auth-inner">
