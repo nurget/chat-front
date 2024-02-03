@@ -12,6 +12,7 @@ import { setUserList } from './store/userListSlice';
 import { disconnectClient, initClient } from './service/ChatService';
 import { Toast } from './components/Toast';
 import { setEnterUser } from './store/enterUserSlice';
+import { persistor } from '.';
 
 function App() {
   const loginUser = useChatSelector((state: any) => state.user);
@@ -49,6 +50,7 @@ function App() {
   useEffect(() => {
     disconnectClient();
     if (!uiNum) {
+      persistor.purge(); // 저장된 상태를 삭제하여 리덕스 스토어의 상태를 초기화
       return;
     }
     initClient(configs).catch((e) => {

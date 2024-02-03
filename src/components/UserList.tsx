@@ -24,6 +24,7 @@ export const UserList = () => {
     console.log('!!=>', tmpUsers.list);
     setUsers(tmpUsers.list);
   }, [tmpUsers]);
+
   return (
     <Sidebar position="left" scrollable={false}>
       <Search placeholder="Search..." />
