@@ -5,11 +5,13 @@ import storage from 'redux-persist/lib/storage';
 import userSlice from './userSlice';
 import userListReducer from './userListSlice';
 import enterUserRudecer from './enterUserSlice';
+import selectedUserReducer from './selectedUserSlice';
 
 const reducers = combineReducers({
   user: userSlice,
   userList: userListReducer,
   enterUser: enterUserRudecer,
+  selectedUser: selectedUserReducer,
 });
 
 // 세션 스토리지, 로컬 스토리지에 저장할 때 사용
