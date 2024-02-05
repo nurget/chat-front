@@ -29,35 +29,34 @@ export const ChatList = () => {
   const dispatch = useChatDispatch();
 
   const getMsgs = async (init: boolean) => {
-    const res = await axiosAuth.get(
-      `/message-log/${selectedUser.uiNum}/${loginUser.uiNum}/${page.current++}`
-    );
-    console.log('res =>', res);
-    const tmpMsgs = res.data.list;
-    tmpMsgs.sort((m1: any, m2: any) => {
-      console.log(m1.cmiSentTime);
-      return m1.cmiSentTime.localeCompare(m2.cmiSentTime);
-    });
-
-    if (init) {
-      const chatInfo: any = {
-        uiNum: selectedUser.uiNum,
-        list: tmpMsgs,
-      };
-      dispatch(setChatList(chatInfo));
-    } else {
-      setMsgs([...tmpMsgs, msgs]);
-    }
+    try {
+      const res = await axiosAuth.get(
+        `/message-log/${selectedUser.uiNum}/${
+          loginUser.uiNum
+        }/${page.current++}`
+      );
+      const tmpMsgs = res.data.list;
+      tmpMsgs.sort((m1: any, m2: any) => {
+        console.log(m1.cmiSentTime);
+        return m1.cmiSentTime.localeCompare(m2.cmiSentTime);
+      });
+      if (init) {
+        const chatInfo: any = {
+          uiNum: selectedUser.uiNum,
+          list: tmpMsgs,
+        };
+        dispatch(setChatList(chatInfo));
+      } else {
+        setMsgs([...tmpMsgs, msgs]);
+      }
+    } catch (e) {}
   };
-
-  // 시간을 2자리 숫자로 포맷팅하는 함수
   const getFormat = (n: number) => {
     return n < 10 ? '0' + n : n;
   };
 
   const days = ['월', '화', '수', '목', '금', '토', '일'];
 
-  // 메시지 목록에서 날짜 구분선을 표시하는 함수
   const printMessageSeparator = (date1?: any, date2?: any) => {
     const d2 = new Date(date2);
     const d2Str = `${d2.getFullYear()}-${getFormat(
@@ -75,8 +74,6 @@ export const ChatList = () => {
       return <MessageSeparator content={`${d2Str} ${days[d2.getDay()]}요일`} />;
     }
   };
-
-  // 메시지 전송 함수
   const sendMsg = () => {
     console.log(inputMsg);
     const destination = `/publish/react-chat/${selectedUser.uiNum}`;

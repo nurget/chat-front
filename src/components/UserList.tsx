@@ -5,23 +5,15 @@ import {
   Search,
   Sidebar,
 } from '@chatscope/chat-ui-kit-react';
-import axios from 'axios';
-import { axiosAuth } from '../api/axiosHttp';
 import { useEffect, useState } from 'react';
-import { User } from '../types/User.type';
-
-import { useNavigate } from 'react-router-dom';
 import { useChatDispatch, useChatSelector } from '../store';
-import { setselectedUser } from '../store/selectedUserSlice';
-import { Msg } from '../types/Msg.type';
+import { setSelectedUser } from '../store/selectedUserSlice';
 
 export const UserList = () => {
   const dispatch = useChatDispatch();
   const tmpUsers = useChatSelector((state: any) => state.userList);
   const [users, setUsers] = useState<any[]>([]);
-
   useEffect(() => {
-    console.log('!!=>', tmpUsers.list);
     setUsers(tmpUsers.list);
   }, [tmpUsers]);
 
@@ -38,12 +30,12 @@ export const UserList = () => {
                 info="Yes i can do it for you"
                 style={{ justifyContent: 'start' }}
                 onClick={() => {
-                  dispatch(setselectedUser(chatUser));
+                  dispatch(setSelectedUser(chatUser));
                 }}
                 unreadCnt={chatUser.unreadCnt}
               >
                 <Avatar
-                  src={require('./images/default.png')}
+                  src={require('./images/ram.png')}
                   name="Lilly"
                   status={chatUser.login ? 'available' : 'dnd'}
                 />

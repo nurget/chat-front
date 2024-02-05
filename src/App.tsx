@@ -1,10 +1,15 @@
 import React, { useEffect } from 'react';
-import logo from './logo.svg';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { Main } from './components/Main';
 import { Login } from './components/Login';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useNavigate,
+} from 'react-router-dom';
 import { SignUp } from './components/SignUp';
 import { Menu } from './components/Menu';
 import { useChatDispatch, useChatSelector } from './store';
@@ -14,12 +19,16 @@ import { Toast } from './components/Toast';
 import { setEnterUser } from './store/enterUserSlice';
 import { persistor } from '.';
 import { Msg } from './types/Msg.type';
+import { globalRouter } from './api/globalRouter';
+import { setChatList } from './store/chatListSlice';
 
 function App() {
+  const navigate = useNavigate();
+  globalRouter.navigate = navigate;
   const loginUser = useChatSelector((state: any) => state.user);
   const uiNum = localStorage.getItem('uiNum');
   const tmpObj = useChatSelector((state: any) => state.userList);
-  const selectedUser = useChatSelector((state: any) => state.selectedUser);
+  let selectedUser = useChatSelector((state: any) => state.selectedUser);
   const dispatch = useChatDispatch();
   const configs = [
     {
@@ -30,11 +39,13 @@ function App() {
           if (!user.login) {
             for (const tmpUser of tmpUsers) {
               if (tmpUser.login && tmpUser.uiNum === user.uiNum) {
+                console.log(tmpUser);
                 return user;
               }
             }
           }
         });
+
         for (const loginUser of loginUsers) {
           dispatch(setEnterUser(loginUser));
         }
@@ -45,28 +56,53 @@ function App() {
       url: `/topic/chat/${loginUser.uiNum}`,
       callback: (data: any) => {
         const msg: Msg = JSON.parse(data.body);
-        if (msg.cmiSenderUiNum !== selectedUser.uiNum) {
-          for (const user of tmpObj.list) {
-            user.unreadCnt = user.unreadCnt ? 1 : user.unreadCnt++;
+        const tmpList: any = JSON.parse(
+          localStorage.getItem('userList') || '[]'
+        );
+        const selectedUser: any = JSON.parse(
+          localStorage.getItem('selectedUser') || '{}'
+        );
+        const uiNum = parseInt(localStorage.getItem('uiNum') || '0');
+        if (
+          msg.cmiSenderUiNum !== selectedUser.uiNum &&
+          msg.cmiSenderUiNum !== uiNum
+        ) {
+          for (const user of tmpList) {
+            if (user.uiNum === msg.cmiSenderUiNum) {
+              user.unreadCnt = isNaN(user.unreadCnt) ? 1 : ++user.unreadCnt;
+              console.log(user);
+            }
           }
         }
-        console.log(msg);
+        dispatch(setUserList(tmpList));
+        if (
+          msg.cmiSenderUiNum === selectedUser.uiNum ||
+          msg.cmiReceiveUiNum === selectedUser.uiNum
+        ) {
+          const chatList: any = JSON.parse(
+            localStorage.getItem('chatList') || '{}'
+          );
+          chatList.list.push(msg);
+          dispatch(setChatList(chatList));
+        }
       },
     },
   ];
   useEffect(() => {
     disconnectClient();
     if (!uiNum) {
-      persistor.purge(); // 저장된 상태를 삭제하여 리덕스 스토어의 상태를 초기화
+      persistor.purge();
       return;
     }
     initClient(configs).catch((e) => {
       console.log(e);
     });
   }, [loginUser]);
-
+  useEffect(() => {
+    console.log(tmpObj.list);
+  }, [tmpObj.list]);
   return (
-    <BrowserRouter>
+    <>
       <Toast />
 
       <div className="App">
@@ -78,6 +114,7 @@ function App() {
             >
               Chatting
             </Link>
+
             <Menu />
           </div>
         </nav>
@@ -91,7 +128,7 @@ function App() {
           </Routes>
         </div>
       </div>
-    </BrowserRouter>
+    </>
   );
 }
 

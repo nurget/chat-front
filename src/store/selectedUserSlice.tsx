@@ -24,10 +24,10 @@ const initialState: User = {
   sessionId: '',
 };
 const selectedUserSlice = createSlice({
-  name: ' selectedUser',
+  name: 'selectedUser',
   initialState: initialState,
   reducers: {
-    setselectedUser: (state: User, action: any) => {
+    setSelectedUser: (state: User, action: any) => {
       state.uiNum = action.payload.uiNum;
       state.uiId = action.payload.uiId;
       state.uiName = action.payload.uiName;
@@ -42,26 +42,12 @@ const selectedUserSlice = createSlice({
       state.uiActiveStatus = action.payload.uiActiveStatus;
       state.loginDate = action.payload.loginDate;
       state.uiImgPath = action.payload.uiImgPath;
-    },
-    initUser: (state: User) => {
-      state.uiNum = initialState.uiNum;
-      state.uiId = initialState.uiId;
-      state.uiName = initialState.uiName;
-      state.uiAddress = initialState.uiAddress;
-      state.uiPhoneNum = initialState.uiPhoneNum;
-      state.uiPwd = initialState.uiPwd;
-      state.uiEmail = initialState.uiEmail;
-      state.uiArea = initialState.uiArea;
-      state.uiCredat = initialState.uiCredat;
-      state.uiCretim = initialState.uiBirth;
-      state.uiActiveStatus = initialState.uiActiveStatus;
-      state.loginDate = initialState.loginDate;
-      state.uiImgPath = initialState.uiImgPath;
+      localStorage.setItem('selectedUser', JSON.stringify(action.payload));
     },
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, () => initialState);
   },
 });
-export const { setselectedUser } = selectedUserSlice.actions;
+export const { setSelectedUser } = selectedUserSlice.actions;
 export default selectedUserSlice.reducer;

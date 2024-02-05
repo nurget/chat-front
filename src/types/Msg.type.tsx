@@ -1,4 +1,5 @@
 export interface Msg {
+  cmiNum?: number;
   cmiMessage?: string;
   cmiSentTime?: string;
   cmiReceivedTime?: string;
@@ -10,4 +11,5 @@ export interface Msg {
   cmiType?: string;
   payload?: string;
   typing?: string;
+  unreadCnt?: number;
 }
