@@ -17,4 +17,5 @@ export interface User {
   loginDate?: string;
   login?: boolean;
   sessionId?: string;
+  unreadCnt?: number;
 }

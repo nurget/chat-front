@@ -13,11 +13,13 @@ import { disconnectClient, initClient } from './service/ChatService';
 import { Toast } from './components/Toast';
 import { setEnterUser } from './store/enterUserSlice';
 import { persistor } from '.';
+import { Msg } from './types/Msg.type';
 
 function App() {
   const loginUser = useChatSelector((state: any) => state.user);
   const uiNum = localStorage.getItem('uiNum');
   const tmpObj = useChatSelector((state: any) => state.userList);
+  const selectedUser = useChatSelector((state: any) => state.selectedUser);
   const dispatch = useChatDispatch();
   const configs = [
     {
@@ -42,7 +44,12 @@ function App() {
     {
       url: `/topic/chat/${loginUser.uiNum}`,
       callback: (data: any) => {
-        const msg = JSON.parse(data.body);
+        const msg: Msg = JSON.parse(data.body);
+        if (msg.cmiSenderUiNum !== selectedUser.uiNum) {
+          for (const user of tmpObj.list) {
+            user.unreadCnt = user.unreadCnt ? 1 : user.unreadCnt++;
+          }
+        }
         console.log(msg);
       },
     },

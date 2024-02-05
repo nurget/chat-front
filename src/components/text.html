@@ -6,7 +6,7 @@
     <title>Document</title>
   </head>
   <body>
-    <input type="text" id="d1" value="2023-01-02 07:00:01" /><br />
+    <!-- <input type="text" id="d1" value="2023-01-02 07:00:01" /><br />
     <input type="text" id="d2" /><br />
     <button onclick="calcDate()">계산</button>
     <script>
@@ -23,6 +23,35 @@
           days[d1.getDay()]
         })`;
         console.log(str);
+      }
+    </script> -->
+
+    <textarea style="width: 230px; height: 500px" id="chatList"></textarea>
+    <br />
+    <button onclick="i = 1; getMsgs(true)">처음 메시지 가져오기</button>
+    <button onclick="getMsgs()">메시지 추가하기</button>
+    <script>
+      let msgs = [];
+      let i = 1;
+      let init = '';
+
+      function getMsgs() {
+        let max = i + 10;
+        const tmpMsgs = [];
+        for (; i < max; i++) {
+          tmpMsgs.push('메시지' + i);
+        }
+        if (init) {
+          msgs = tmpMsgs;
+        } else {
+          msgs = [...tmpMsgs, ...msgs];
+        }
+
+        let text = '';
+        for (const msg of msgs) {
+          text += msg + '\r\n';
+        }
+        document.querySelector('#chatList').value = text;
       }
     </script>
   </body>
