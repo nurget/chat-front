@@ -15,6 +15,10 @@ const client = new Client({
   debug: (str) => {
     console.log(str);
   },
+  // 연결이 끊어졌을 때 재연결을 시도하기 전 대기해야 하는 시간 (1초)
+  reconnectDelay: 1000,
+  // 클라이언트가 서버에 연결하는데 허용되는 최대 시간 (0.1초)
+  connectionTimeout: 100,
 });
 export const initClient = async (configs: any) => {
   return new Promise((resolve, reject) => {

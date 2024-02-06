@@ -29,23 +29,26 @@ export const ChatList = () => {
   const dispatch = useChatDispatch();
 
   const getMsgs = async (init: boolean) => {
-    const res = await axiosAuth.get(
-      `/chat/msg-infos?cmiSenderUiNum=${loginUser.uiNum}&cmiReceiveUiNum=${selectedUser.uiNum}`
-    );
-    const tmpMsgs = res.data.list;
-    tmpMsgs.sort((m1: any, m2: any) => {
-      console.log(m1.cmiSentTime);
-      return m1.cmiSentTime.localeCompare(m2.cmiSentTime);
-    });
-    if (init) {
-      const chatInfo: any = {
-        uiNum: selectedUser.uiNum,
-        list: tmpMsgs,
-      };
-      dispatch(setChatList(chatInfo));
-    } else {
-      setMsgs([...tmpMsgs, msgs]);
-    }
+    if (!selectedUser.uiNum) return;
+    try {
+      const res = await axiosAuth.get(
+        `/chat/msg-infos?cmiSenderUiNum=${loginUser.uiNum}&cmiReceiveUiNum=${selectedUser.uiNum}`
+      );
+      const tmpMsgs = res.data.list;
+      tmpMsgs.sort((m1: any, m2: any) => {
+        console.log(m1.cmiSentTime);
+        return m1.cmiSentTime.localeCompare(m2.cmiSentTime);
+      });
+      if (init) {
+        const chatInfo: any = {
+          uiNum: selectedUser.uiNum,
+          list: tmpMsgs,
+        };
+        dispatch(setChatList(chatInfo));
+      } else {
+        setMsgs([...tmpMsgs, msgs]);
+      }
+    } catch (e) {}
   };
   const getFormat = (n: number) => {
     return n < 10 ? '0' + n : n;
@@ -100,6 +103,7 @@ export const ChatList = () => {
       </ConversationHeader>
       <MessageList>
         {selectedUser.uiNum !== 0 &&
+          chatList.list && // chatList.list가 null 또는 undefined일 때 map 함수 호출 방지
           chatList.list.map((msg: Msg, idx: number) => (
             <>
               {printMessageSeparator(
@@ -129,6 +133,7 @@ export const ChatList = () => {
             </>
           ))}
       </MessageList>
+
       <MessageInput
         placeholder="Type message here"
         value={inputMsg}

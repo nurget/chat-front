@@ -34,22 +34,17 @@ function App() {
     {
       url: `/topic/enter-chat`,
       callback: (data: any) => {
-        const tmpUsers = JSON.parse(data.body);
-        const loginUsers = tmpObj.list.filter((user: any) => {
-          if (!user.login) {
-            for (const tmpUser of tmpUsers) {
-              if (tmpUser.login && tmpUser.uiNum === user.uiNum) {
-                console.log(tmpUser);
-                return user;
-              }
+        const connectedUsers = JSON.parse(data.body);
+        const users = JSON.parse(localStorage.getItem('userList') || '[]');
+        users.map((user: any) => {
+          for (const key in connectedUsers) {
+            const connectedUser = connectedUsers[key];
+            if (user.uiNum === connectedUser.uiNum) {
+              user.login = connectedUser.login;
             }
           }
         });
-
-        for (const loginUser of loginUsers) {
-          dispatch(setEnterUser(loginUser));
-        }
-        dispatch(setUserList(tmpUsers));
+        dispatch(setUserList(users));
       },
     },
     {
@@ -75,6 +70,8 @@ function App() {
           }
         }
         dispatch(setUserList(tmpList));
+        console.log(msg);
+
         if (
           msg.cmiSenderUiNum === selectedUser.uiNum ||
           msg.cmiReceiveUiNum === selectedUser.uiNum
@@ -90,22 +87,28 @@ function App() {
   ];
   useEffect(() => {
     disconnectClient();
-    if (!uiNum) {
+    if (loginUser.uiNum === 0) {
       persistor.purge();
+      navigate('/');
       return;
     }
     initClient(configs).catch((e) => {
       console.log(e);
     });
   }, [loginUser]);
+
   useEffect(() => {
     console.log(tmpObj.list);
+    setTimeout(async () => {
+      await initClient(configs).catch((e) => {
+        console.log(e);
+      });
+    }, 200);
   }, [tmpObj.list]);
 
   return (
     <>
       <Toast />
-
       <div className="App">
         <nav className="navbar navbar-expand-lg navbar-light fixed-top">
           <div className="container">

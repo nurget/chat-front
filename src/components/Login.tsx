@@ -45,9 +45,10 @@ export const Login = () => {
       let res = await axiosHttp.post('/api/login', chatUser);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('uiNum', res.data.uiNum);
-      dispatch(setUser(res.data));
+      const user = res.data;
       res = await axiosAuth.get(`/chat-user-infos/${res.data.uiNum}`);
       dispatch(setUserList(res.data));
+      dispatch(setUser(user));
       navigate('/main');
     } catch (err) {
       setError(true);
