@@ -1,16 +1,20 @@
 import axios from 'axios';
-import { persistor } from '..';
 import { globalRouter } from './globalRouter';
+import { persistor } from '..';
 
 const url = `${process.env.REACT_APP_HTTP}://${process.env.REACT_APP_HOST}`;
 export const axiosHttp = axios.create({
   baseURL: url,
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
+  },
 });
-
+const token = localStorage.getItem('token');
 export const axiosAuth = axios.create({
   baseURL: url,
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
+    Authorization: `Bearer ${token}`,
   },
 });
 
@@ -23,14 +27,13 @@ axiosAuth.interceptors.request.use(
         return Promise.reject('login');
       }
     }
-    config.headers.Authorization = token;
+    config.headers.Authorziation = token;
     return config;
   },
   (err: any) => {
     return Promise.reject(err);
   }
 );
-
 axiosAuth.interceptors.response.use(
   function (res) {
     return res;
@@ -50,7 +53,6 @@ axiosAuth.interceptors.response.use(
           return Promise.reject(error);
       }
     }
-
     return Promise.reject(error);
   }
 );

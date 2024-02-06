@@ -1,9 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { PURGE } from 'redux-persist';
-
 const initialState = {
   uiNum: 0,
-  list: [],
+  init: [],
 };
 const chatListSlice = createSlice({
   name: 'chatList',

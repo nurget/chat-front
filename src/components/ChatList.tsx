@@ -29,34 +29,28 @@ export const ChatList = () => {
   const dispatch = useChatDispatch();
 
   const getMsgs = async (init: boolean) => {
-    try {
-      const res = await axiosAuth.get(
-        `/message-log/${selectedUser.uiNum}/${
-          loginUser.uiNum
-        }/${page.current++}`
-      );
-      const tmpMsgs = res.data.list;
-      tmpMsgs.sort((m1: any, m2: any) => {
-        console.log(m1.cmiSentTime);
-        return m1.cmiSentTime.localeCompare(m2.cmiSentTime);
-      });
-      if (init) {
-        const chatInfo: any = {
-          uiNum: selectedUser.uiNum,
-          list: tmpMsgs,
-        };
-        dispatch(setChatList(chatInfo));
-      } else {
-        setMsgs([...tmpMsgs, msgs]);
-      }
-    } catch (e) {}
+    const res = await axiosAuth.get(
+      `/chat/msg-infos?cmiSenderUiNum=${loginUser.uiNum}&cmiReceiveUiNum=${selectedUser.uiNum}`
+    );
+    const tmpMsgs = res.data.list;
+    tmpMsgs.sort((m1: any, m2: any) => {
+      console.log(m1.cmiSentTime);
+      return m1.cmiSentTime.localeCompare(m2.cmiSentTime);
+    });
+    if (init) {
+      const chatInfo: any = {
+        uiNum: selectedUser.uiNum,
+        list: tmpMsgs,
+      };
+      dispatch(setChatList(chatInfo));
+    } else {
+      setMsgs([...tmpMsgs, msgs]);
+    }
   };
   const getFormat = (n: number) => {
     return n < 10 ? '0' + n : n;
   };
-
   const days = ['월', '화', '수', '목', '금', '토', '일'];
-
   const printMessageSeparator = (date1?: any, date2?: any) => {
     const d2 = new Date(date2);
     const d2Str = `${d2.getFullYear()}-${getFormat(
@@ -76,7 +70,7 @@ export const ChatList = () => {
   };
   const sendMsg = () => {
     console.log(inputMsg);
-    const destination = `/publish/react-chat/${selectedUser.uiNum}`;
+    const destination = `/publish/chat/${selectedUser.uiNum}`;
     publishMsg(destination, {
       cmiMessage: inputMsg,
       cmiSenderUiNum: loginUser.uiNum,
@@ -84,13 +78,11 @@ export const ChatList = () => {
     });
     setInputMsg('');
   };
-
   useEffect(() => {
     page.current = 1;
     console.log(selectedUser);
     getMsgs(true);
   }, [selectedUser]);
-
   return (
     <ChatContainer>
       <ConversationHeader>

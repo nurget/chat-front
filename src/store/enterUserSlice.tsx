@@ -3,15 +3,14 @@ import { PURGE } from 'redux-persist';
 
 const initialState = {
   uiNum: 0,
-  uiName: '',
+  uiname: '',
 };
-
 const enterUserSlice = createSlice({
   name: 'enterUser',
   initialState: initialState,
   reducers: {
     setEnterUser: (state: any, action: any) => {
-      state.uiNum = action.payload.uiNum;
+      state.list = action.payload.uiNum;
       state.uiName = action.payload.uiName;
     },
     initUser: (state: any) => {
@@ -23,6 +22,5 @@ const enterUserSlice = createSlice({
     builder.addCase(PURGE, () => initialState);
   },
 });
-
-export const { setEnterUser } = enterUserSlice.actions;
+export const { setEnterUser, initUser } = enterUserSlice.actions;
 export default enterUserSlice.reducer;

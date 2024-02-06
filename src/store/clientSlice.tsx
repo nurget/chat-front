@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Client } from '@stomp/stompjs';
 
-const brokerURL = `${process.env.REACT_APP_WS}://${process.env.REACT_APP_HOST}`;
+const brokerURL = `${process.env.REACT_APP_HTTP}://${process.env.REACT_APP_HOST}`;
 const initialState = {
   client: {},
 };
-
 const clientSlice = createSlice({
   name: 'client',
   initialState: initialState,
@@ -13,14 +12,9 @@ const clientSlice = createSlice({
     initClient: (state: any) => {
       state.client = new Client({
         brokerURL: brokerURL,
-        debug: (str) => {
-          console.log(str);
-        },
+        debug: (str) => {},
         connectHeaders: {
           uiNum: localStorage.getItem('uiNum') || '',
-        },
-        onConnect: (frame) => {
-          console.log(frame);
         },
       });
     },
@@ -32,7 +26,3 @@ const clientSlice = createSlice({
     },
   },
 });
-
-// export default clientSlice.reducer;
-
-// export const { initClient, setSubscribe } = clientSlice.actions;

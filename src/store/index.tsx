@@ -1,30 +1,26 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from 'react-redux';
 import { persistReducer } from 'redux-persist';
+import { useDispatch, useSelector } from 'react-redux';
+import userReducer from './userSlice';
 import storage from 'redux-persist/lib/storage';
-import userSlice from './userSlice';
 import userListReducer from './userListSlice';
-import chatListReducer from './chatListSlice';
-import enterUserRudecer from './enterUserSlice';
+import enterUserReducer from './enterUserSlice';
 import selectedUserReducer from './selectedUserSlice';
-
+import chatListReducer from './chatListSlice';
 const reducers = combineReducers({
-  user: userSlice,
+  user: userReducer,
   userList: userListReducer,
-  enterUser: enterUserRudecer,
+  enterUser: enterUserReducer,
   selectedUser: selectedUserReducer,
   chatList: chatListReducer,
 });
 
-// 세션 스토리지, 로컬 스토리지에 저장할 때 사용
 const persistConfig = {
   key: 'root',
   storage,
   whitelist: ['user', 'userList'],
 };
-
 const persistedReducer = persistReducer(persistConfig, reducers);
-
 export const store = configureStore({
   reducer: persistedReducer,
   devTools: process.env.NODE_ENV !== 'production',

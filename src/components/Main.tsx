@@ -1,6 +1,23 @@
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import React, { useState } from 'react';
-import { MainContainer } from '@chatscope/chat-ui-kit-react';
+import {
+  MainContainer,
+  Sidebar,
+  Search,
+  ConversationList,
+  Conversation,
+  Avatar,
+  ChatContainer,
+  ConversationHeader,
+  VoiceCallButton,
+  Message,
+  MessageInput,
+  VideoCallButton,
+  InfoButton,
+  MessageSeparator,
+  TypingIndicator,
+  MessageList,
+} from '@chatscope/chat-ui-kit-react';
 import { UserList } from './UserList';
 import { ChatList } from './ChatList';
 
@@ -8,17 +25,17 @@ export const Main = () => {
   const [messageInputValue, setMessageInputValue] = useState('');
 
   return (
-    <div className="auth-wrapper">
-      <div
-        style={{
-          height: '600px',
-          position: 'relative',
-        }}
-      >
-        <MainContainer responsive>
-          <UserList />
-          <ChatList />
-          {/* <Sidebar position="right">
+    <div
+      style={{
+        height: '600px',
+        position: 'relative',
+      }}
+    >
+      <MainContainer responsive>
+        <UserList></UserList>
+        <ChatList></ChatList>
+
+        {/* <Sidebar position="right">
           <ExpansionPanel open title="INFO">
             <p>Lorem ipsum</p>
             <p>Lorem ipsum</p>
@@ -50,8 +67,7 @@ export const Main = () => {
             <p>Lorem ipsum</p>
           </ExpansionPanel>
         </Sidebar> */}
-        </MainContainer>
-      </div>
+      </MainContainer>
     </div>
   );
 };

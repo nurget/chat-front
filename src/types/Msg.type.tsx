@@ -10,6 +10,5 @@ export interface Msg {
   cmiPosition?: string;
   cmiType?: string;
   payload?: string;
-  typing?: string;
-  unreadCnt?: number;
+  type?: string;
 }

@@ -25,10 +25,10 @@ import { setChatList } from './store/chatListSlice';
 function App() {
   const navigate = useNavigate();
   globalRouter.navigate = navigate;
+  const selectedUser = useChatSelector((state: any) => state.selectedUser);
   const loginUser = useChatSelector((state: any) => state.user);
   const uiNum = localStorage.getItem('uiNum');
   const tmpObj = useChatSelector((state: any) => state.userList);
-  let selectedUser = useChatSelector((state: any) => state.selectedUser);
   const dispatch = useChatDispatch();
   const configs = [
     {
@@ -101,6 +101,7 @@ function App() {
   useEffect(() => {
     console.log(tmpObj.list);
   }, [tmpObj.list]);
+
   return (
     <>
       <Toast />

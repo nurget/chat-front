@@ -1,4 +1,11 @@
 import { Client } from '@stomp/stompjs';
+import { subscribe } from 'diagnostics_channel';
+import { resolve } from 'path';
+
+import { setUserList } from '../store/userListSlice';
+import { useDispatch } from 'react-redux';
+import { useChatDispatch } from '../store';
+import { config } from 'process';
 import { Msg } from '../types/Msg.type';
 
 const brokerURL = `${process.env.REACT_APP_WS}://${process.env.REACT_APP_HOST}/chat`;
@@ -6,10 +13,9 @@ const brokerURL = `${process.env.REACT_APP_WS}://${process.env.REACT_APP_HOST}/c
 const client = new Client({
   brokerURL: brokerURL,
   debug: (str) => {
-    // console.log(str);
+    console.log(str);
   },
 });
-
 export const initClient = async (configs: any) => {
   return new Promise((resolve, reject) => {
     if (!localStorage.getItem('uiNum') || !localStorage.getItem('token')) {
@@ -28,13 +34,11 @@ export const initClient = async (configs: any) => {
     client.activate();
   });
 };
-
 export const disconnectClient = () => {
   if (client.connected) {
     client.deactivate();
   }
 };
-
 export const publishMsg = (destination: string, msg: Msg) => {
   client.publish({
     destination: destination,

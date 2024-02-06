@@ -24,7 +24,7 @@ const initialState: User = {
   sessionId: '',
 };
 const selectedUserSlice = createSlice({
-  name: 'selectedUser',
+  name: ' selectedUser',
   initialState: initialState,
   reducers: {
     setSelectedUser: (state: User, action: any) => {

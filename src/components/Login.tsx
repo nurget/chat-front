@@ -1,43 +1,58 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+
 import { User } from '../types/User.type';
-import { useNavigate } from 'react-router-dom';
-import { axiosHttp } from '../api/axiosHttp';
-import { setUser } from '../store/userSlice';
-import { useChatDispatch } from '../store';
+import { useNavigate, useNavigation } from 'react-router-dom';
 import axios from 'axios';
+
+import { axiosAuth, axiosHttp } from '../api/axiosHttp';
+import { setUser } from '../store/userSlice';
+
+import { useChatDispatch } from '../store';
 import { initClient } from '../service/ChatService';
 import { setUserList } from '../store/userListSlice';
 
 export const Login = () => {
-  const [error, setError] = useState<boolean>(false);
   const [chatUser, setChatUser] = useState<User>({});
-  const [rememberId, setRememberId] = useState<boolean>(false);
-
+  const [rememberId, setRememberId] = useState(false);
+  const [error, setError] = useState<boolean>(false);
   const dispatch = useChatDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    let uiId: any = localStorage.getItem('uiId');
+    if (uiId) {
+      setChatUser({
+        ...chatUser,
+        uiId: uiId,
+      });
+    } else {
+      setRememberId(true);
+    }
+  }, []);
+
+  const checkRememberId = (evt: any) => {
+    setRememberId(evt.target.checked);
+  };
   const changeUser = (evt: any) => {
     setChatUser({
       ...chatUser,
       [evt.target.id]: evt.target.value,
     });
-  };
-  const checkRembmerId = (evt: any) => {
-    setRememberId(evt.target.checked);
+    console.log(chatUser);
   };
   const login = async () => {
     setError(false);
     try {
-      const res = await axiosHttp.post('/api/login', chatUser);
+      let res = await axiosHttp.post('/api/login', chatUser);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('uiNum', res.data.uiNum);
       dispatch(setUser(res.data));
+      res = await axiosAuth.get(`/chat-user-infos/${res.data.uiNum}`);
+      dispatch(setUserList(res.data));
       navigate('/main');
     } catch (err) {
-      console.error(err);
       setError(true);
     }
   };
-
   useEffect(() => {
     localStorage.clear();
   }, []);
@@ -47,6 +62,7 @@ export const Login = () => {
       <div className="auth-inner">
         <form>
           <h3>Sign In</h3>
+
           <div className="mb-3">
             {error ? (
               <div className="text-danger">
@@ -57,22 +73,22 @@ export const Login = () => {
             )}
             <label>ID</label>
             <input
-              type="text"
               id="uiId"
+              type="text"
               className="form-control"
-              placeholder="아이디"
-              value={chatUser.uiId || ''}
+              placeholder="Enter ID"
               onChange={changeUser}
+              value={chatUser.uiId}
             />
           </div>
 
           <div className="mb-3">
             <label>Password</label>
             <input
-              type="password"
               id="uiPwd"
+              type="password"
               className="form-control"
-              placeholder="비밀번호"
+              placeholder="Enter password"
               onChange={changeUser}
             />
           </div>
@@ -83,7 +99,7 @@ export const Login = () => {
                 type="checkbox"
                 className="custom-control-input"
                 id="customCheck1"
-                onChange={checkRembmerId}
+                onChange={checkRememberId}
                 checked={rememberId}
               />
               <label className="custom-control-label" htmlFor="customCheck1">
@@ -94,7 +110,7 @@ export const Login = () => {
 
           <div className="d-grid">
             <button type="button" className="btn btn-primary" onClick={login}>
-              Sign In
+              Login
             </button>
           </div>
           <p className="forgot-password text-right">

@@ -1,3 +1,5 @@
+import { create } from 'domain';
+import { User } from '../types/User.type';
 import { createSlice } from '@reduxjs/toolkit';
 
 const userListSlice = createSlice({
